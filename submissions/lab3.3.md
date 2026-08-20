@@ -8,20 +8,22 @@ Paste the full content of `.github/workflows/lab3-gitleaks-scan.yml`:
 ### Successful workflow run
 - Direct link to a **green (Success)** workflow run: https://github.com/cloudsec-luanphan/brown-devsecops-lab-submissions/actions/runs/32242127393
 
-### Job step explanation
-Explain the purpose of each part of the `gitleaks` job (2-3 sentences each):
+### Triggers (`on:`)
 
-#### Triggers (`on:`)
-What events start this workflow, and why scan on both `push` and `pull_request`?
+The workflow runs on both `push` and `pull_request` events. Scanning both ensures secrets are detected when code is pushed and before changes are merged through a pull request.
 
-#### Job: `gitleaks` / `runs-on: ubuntu-latest`
-What is this job, and why does it run on a GitHub-hosted Ubuntu runner?
+### Job: `gitleaks` / `runs-on: ubuntu-latest`
 
-#### Step: Checkout repository
-What does `actions/checkout@v4` do? Why is `fetch-depth: 0` important for gitleaks?
+The `gitleaks` job scans the repository for exposed secrets. It uses a GitHub-hosted Ubuntu runner because it provides a clean environment for running the security scan.
 
-#### Step: Run Gitleaks
-What does `gitleaks/gitleaks-action@v2` do? What is `GITHUB_TOKEN` used for?
+### Step: Checkout repository
 
-### One-paragraph reflection (2-3 sentences)
-Why is CI scanning still necessary if every developer already has a gitleaks pre-commit hook?
+`actions/checkout@v4` downloads the repository code to the GitHub Actions runner. `fetch-depth: 0` fetches the full Git history, which is important for Gitleaks to detect secrets in previous commits.
+
+### Step: Run Gitleaks
+
+`gitleaks/gitleaks-action@v2` runs Gitleaks to scan the repository for exposed secrets. `GITHUB_TOKEN` allows the action to authenticate with GitHub and interact with the repository when required.
+
+### One-paragraph reflection
+
+CI scanning provides an additional security layer because developers may bypass or forget to run pre-commit hooks. It ensures secrets are scanned centrally before code is merged or deployed.
